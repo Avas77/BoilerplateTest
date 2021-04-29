@@ -6,13 +6,17 @@
  */
 
 import React from 'react';
-import { FormattedMessage } from 'react-intl';
-import messages from './messages';
+import './styles.css';
 
 export default function HomePage() {
   return (
-    <h1>
-      <FormattedMessage {...messages.header} />
-    </h1>
+    <div className="HomePage">
+      <h1 className="header">
+        View our Image Gallery with 100+ photos on demand
+      </h1>
+      <a className="btn" href="/images">
+        Get Started
+      </a>
+    </div>
   );
 }
