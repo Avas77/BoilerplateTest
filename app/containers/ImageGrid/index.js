@@ -4,15 +4,14 @@
  *
  */
 
-import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Helmet } from 'react-helmet';
+
 import { createStructuredSelector } from 'reselect';
 import { compose } from 'redux';
-import Button from '../../components/Button';
-import { useInjectSaga } from 'utils/injectSaga';
-import { useInjectReducer } from 'utils/injectReducer';
+
+import useInjectSaga from 'utils/injectSaga';
+import useInjectReducer from 'utils/injectReducer';
 import {
   makeSelectError,
   makeSelectImages,
@@ -22,43 +21,7 @@ import reducer from './reducer';
 import saga from './saga';
 import './ImageGrid.css';
 import { loadImages } from './actions';
-
-export function ImageGrid(props) {
-  useInjectReducer({ key: 'imageGrid', reducer });
-  useInjectSaga({ key: 'imageGrid', saga });
-
-  useEffect(() => {
-    props.onButtonClicked();
-  }, []);
-
-  return (
-    <div className="content">
-      <Helmet>
-        <title>ImageGrid</title>
-        <meta name="description" content="Description of ImageGrid" />
-      </Helmet>
-      <section className="grid">
-        {props.images.map(image => (
-          <div
-            key={image.id}
-            className={`item item-${Math.ceil(image.height / image.width)}`}
-          >
-            <img src={image.urls.small} alt={image.user.username} />
-          </div>
-        ))}
-      </section>
-      {props.error && (
-        <div className="error">{JSON.stringify(props.error)}</div>
-      )}
-      <Button
-        onClick={() => !props.isLoading && props.onButtonClicked()}
-        loading={props.isLoading}
-      >
-        Load More
-      </Button>
-    </div>
-  );
-}
+import ImageGrid from './ImageGrid';
 
 ImageGrid.propTypes = {
   images: PropTypes.array,
@@ -76,9 +39,14 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
+const withReducer = useInjectReducer({ key: 'imageGrid', reducer });
+const withSaga = useInjectSaga({ key: 'imageGrid', saga });
+
 const withConnect = connect(
   mapStateToProps,
   mapDispatchToProps,
+  withSaga,
+  withReducer,
 );
 
 export default compose(withConnect)(ImageGrid);

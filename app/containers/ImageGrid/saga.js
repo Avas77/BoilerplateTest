@@ -5,11 +5,10 @@ import { setError, setImages } from './actions';
 import { makeSelectPages } from './selectors';
 
 function* handleImagesLoad() {
+  console.log('Hello From Saga');
   try {
     const page = yield select(makeSelectPages());
-    console.log(page);
     const images = yield call(fetchImages, page);
-    console.log(typeof images);
     yield put(setImages(images));
   } catch (error) {
     yield put(setError(error.toString()));
