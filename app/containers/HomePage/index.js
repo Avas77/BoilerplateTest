@@ -1,22 +1,34 @@
-/*
- * HomePage
- *
- * This is the first thing users see of our App, at the '/' route
- *
- */
+import { connect } from 'react-redux';
+import { createStructuredSelector } from 'reselect';
+import { compose } from 'redux';
 
-import React from 'react';
-import './styles.css';
+import useInjectSaga from 'utils/injectSaga';
+import useInjectReducer from 'utils/injectReducer';
+import makeSelectHomePage from './selectors';
+import reducer from './reducer';
+import saga from './saga';
+import HomePage from './Homepage';
 
-export default function HomePage() {
-  return (
-    <div className="HomePage">
-      <h1 className="header">
-        View our Image Gallery with 100+ photos on demand
-      </h1>
-      <a className="btn" href="/images">
-        Get Started
-      </a>
-    </div>
-  );
+const mapStateToProps = createStructuredSelector({
+  homePage: makeSelectHomePage(),
+});
+
+function mapDispatchToProps(dispatch) {
+  return {
+    dispatch,
+  };
 }
+
+const withReducer = useInjectReducer({ key: 'homePage', reducer });
+const withSaga = useInjectSaga({ key: 'homePage', saga });
+
+const withConnect = connect(
+  mapStateToProps,
+  mapDispatchToProps,
+);
+
+export default compose(
+  withConnect,
+  withReducer,
+  withSaga,
+)(HomePage);

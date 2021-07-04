@@ -10,8 +10,8 @@ import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { compose } from 'redux';
 
-import useInjectSaga from 'utils/injectSaga';
-import useInjectReducer from 'utils/injectReducer';
+import injectSaga from 'utils/injectSaga';
+import injectReducer from 'utils/injectReducer';
 import {
   makeSelectError,
   makeSelectImages,
@@ -39,14 +39,16 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-const withReducer = useInjectReducer({ key: 'imageGrid', reducer });
-const withSaga = useInjectSaga({ key: 'imageGrid', saga });
+const withReducer = injectReducer({ key: 'imageGrid', reducer });
+const withSaga = injectSaga({ key: 'imageGrid', saga });
 
 const withConnect = connect(
   mapStateToProps,
   mapDispatchToProps,
-  withSaga,
-  withReducer,
 );
 
-export default compose(withConnect)(ImageGrid);
+export default compose(
+  withConnect,
+  withReducer,
+  withSaga,
+)(ImageGrid);
